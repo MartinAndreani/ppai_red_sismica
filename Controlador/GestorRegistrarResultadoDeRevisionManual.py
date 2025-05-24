@@ -1,0 +1,2 @@
+class GestorRegistrarResultadoDeRevisionManual:
+    pass
