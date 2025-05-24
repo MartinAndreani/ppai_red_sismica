@@ -13,7 +13,7 @@
 ```
 ### 3. Activar el entorno virtual:
 ```bash
-  source env/bin/activate | source .venv/Scripts/Activate
+  source venv/bin/activate | source .venv/Scripts/Activate
 ```
 ### 4. Iniciar Proyecto
 ```bash
