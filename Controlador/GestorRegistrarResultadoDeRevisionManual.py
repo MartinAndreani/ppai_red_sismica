@@ -13,6 +13,7 @@ class GestorRegistrarResultadoDeRevisionManual:
         self.resultadoDeRevisionManual = None     # Confirmar evento, Rechazar evento o Solicitar revisión a experto
         self.estadoRechazado = None              # Puntero a objeto Estado
         self.datosUsuarioLogueado = []           # Lista de strings
+        self.listaDatosRestantesDeEventos = []
         
     def buscarEventosSimicosNoRevisados(self, eventos):
         for evento in eventos:
@@ -48,14 +49,19 @@ class GestorRegistrarResultadoDeRevisionManual:
 
     def bloquearEventoSismicoSeleccionado(self):
         fechaHoraActual = self.getFechaHoraActual()
-        self.eventoSismicoSeleccionado.finalizarCambioEstadoActual(fechaHoraActual)
-
+        self.eventoSismicoSeleccionado.bloquearEnRevision(fechaHoraActual, self.estadoBloqueadoEnRevision)
 
     def buscarDatosRestantesEventoSismico(self):
-        pass
+        datosRestantes = {
+            'alcance': self.eventoSismicoSeleccionado.getAlcance(),
+            'clasificacion': self.eventoSismicoSeleccionado.getClasificacion(),
+            'origen': self.eventoSismicoSeleccionado.getOrigen()
+        }
+        self.listaDatosRestantesDeEventos.append(datosRestantes)
 
     def buscarDatosMuestrasSismicasDeEventoSismico(self):
-        pass
+        self.eventoSismicoSeleccionado.buscarDatosMuestrasSismicas()
+
 
     def buscarNombreEstacionSismologicaDeCadaSerieTemporal(self):
         pass

@@ -7,3 +7,6 @@ class SerieTemporal:
         self.fechaHoraInicioMuestras = fechaHoraInicioMuestras # datetime
         self.muestras: List[MuestraSismica] = [] # Lista de punteros a objetos MuestraSismica
         
+    def buscarDatosMuestrasSismicas(self):
+        for muestra in self.muestras:
+            pass
