@@ -2,7 +2,9 @@ from Modelo.Usuario import Usuario
 
 class Sesion:
     def __init__(self, usuario: Usuario):
-        self.usuario = usuario
+        self.usuario = usuario # puntero a objeto Usuario
+        self.fechaHoraInicio = None # datetime
+        self.fechaHoraFin = None # datetime
         
     def getDatosASLogueado(self):
         return self.usuario.getDatosEmpleado()
