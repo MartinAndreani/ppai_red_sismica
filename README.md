@@ -13,9 +13,19 @@
 ```
 ### 3. Activar el entorno virtual:
 ```bash
-  source venv/bin/activate | source .venv/Scripts/Activate
+  source env/Scripts/activate
+```
+### 4. Instalar librerias necesarias:
+```bash
+  pip install uvicorn
+```
+```bash
+  pip install fastapi
+```
+```bash
+  pip install dotenv
 ```
 ### 4. Iniciar Proyecto
 ```bash
-  uvicorn main:ppai
+  uvicorn main:app
 ```
