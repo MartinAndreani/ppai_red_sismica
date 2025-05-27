@@ -1,0 +1,4 @@
+APP_NAME=ppai_red_sismica
+API_KEY=velezneta123
+DEBUG=True
+PORT=8000

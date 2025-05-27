@@ -3,3 +3,14 @@ class ClasificacionSismo:
         self.nombre = nombre # str
         self.kmProfundidadDesde = kmProfundidadDesde # float
         self.kmProfundidadHasta = kmProfundidadHasta # float
+
+    def getNombre(self):
+        return self.nombre
+    
+    def getKmProfundidadDesde(self):
+        return self.getKmProfundidadDesde
+    
+    def getKmProfundidadHasta(self):
+        return self.getKmProfundidadHasta
+    
+    
