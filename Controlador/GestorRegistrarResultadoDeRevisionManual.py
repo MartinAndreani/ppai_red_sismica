@@ -9,11 +9,13 @@ class GestorRegistrarResultadoDeRevisionManual:
         self.listaDatosPrincipalesDeEventos = [] # Lista con atributos de Eventos Sismicos
         self.estadoBloqueadoEnRevision = None     # Puntero a objeto Estado
         self.eventoSismicoSeleccionado = None     # Puntero a objeto EventoSismico
+        self.listaDatosRestantesDeEventoSeleccionado = []   # Lista con datos del evento sísmico (alcance, clasificación, origen)
+        self.seriesTemporalesDeEventoSeleccionado = []       # Lista de series temporales con sus datos para generar sismogramas
         self.aprobacionVisualizacionMapa = False  # bool
+        self.aprobacionModificacionDatos = False  # bool
         self.resultadoDeRevisionManual = None     # Confirmar evento, Rechazar evento o Solicitar revisión a experto
-        self.estadoRechazado = None              # Puntero a objeto Estado
-        self.datosUsuarioLogueado = []           # Lista de strings
-        self.listaDatosRestantesDeEventos = []
+        self.estadoRechazado = None  # Puntero a objeto estado Rechazado
+        self.datosUsuarioLogueado = []   # Lista de strings
         
     def buscarEventosSimicosNoRevisados(self, eventos):
         for evento in eventos:
@@ -57,17 +59,15 @@ class GestorRegistrarResultadoDeRevisionManual:
             'clasificacion': self.eventoSismicoSeleccionado.getClasificacion(),
             'origen': self.eventoSismicoSeleccionado.getOrigen()
         }
-        self.listaDatosRestantesDeEventos.append(datosRestantes)
+        self.listaDatosRestantesDeEventoSeleccionado.append(datosRestantes)
 
     def buscarDatosSeriesTemporales(self):
-        datos_muestras = self.eventoSismicoSeleccionado.buscarDatosSeriesTemporales()
-        self.listaDatosRestantesDeEventos.append(datos_muestras)
+        # Obtener y guardar las series temporales en el atributo dedicado
+        self.seriesTemporalesDeEventoSeleccionado = self.eventoSismicoSeleccionado.buscarDatosSeriesTemporales()
 
-    def buscarNombreEstacionSismologicaDeCadaSerieTemporal(self):
-        pass
-
-    def ordenarInstantesDeTiempoPorEstacionSismologica(self):
-        pass
+    def ordenarSeriesTemporalesPorEstacionSismologica(self):
+        # Ordenar las series temporales por nombre de estación sismológica
+        self.seriesTemporalesDeEventoSeleccionado = sorted(self.seriesTemporalesDeEventoSeleccionado, key=lambda x: x['estacionSismologica'])
 
     def tomarAprobacionVisualizacionMapaEventoSismico(self):
         pass
@@ -78,8 +78,28 @@ class GestorRegistrarResultadoDeRevisionManual:
     def tomarResultadoDeRevisionManual(self):
         pass
 
-    def validarDatosModificablesYResultadoDeRevisionManual(self):
-        pass
+    def validarDatosModificablesYResultadoDeRevisionManual(self): # Valida que el EventoSismico seleccionado cuente con los atributos magnitud
+      
+        if self.eventoSismicoSeleccionado is None:
+            return False
+            
+        if self.eventoSismicoSeleccionado.getValorMagnitud() is None:
+            return False
+            
+        alcance = self.eventoSismicoSeleccionado.getAlcance()
+        if alcance is None or alcance == "":
+            return False
+            
+        # Verificar que existe origen de generación (debe ser un string no vacío)
+        origen = self.eventoSismicoSeleccionado.getOrigen()
+        if origen is None or origen == "":
+            return False
+            
+        # Verificar que existe un resultado de revisión manual (debe ser uno de los valores esperados)
+        if self.resultadoDeRevisionManual not in ["Confirmar evento", "Rechazar evento", "Solicitar revisión a experto"]:
+            return False
+            
+        return True
 
     def buscarEstadoRechazado(self, estados):
         for estado in estados:

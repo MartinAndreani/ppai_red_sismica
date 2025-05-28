@@ -1,15 +1,13 @@
 from datetime import datetime
-from Modelo.EventoSismico import EventoSismico
-from Modelo.AlcanceSismo import AlcanceSismo
-from Modelo.ClasificacionSismo import ClasificacionSismo
-from Modelo.OrigenDeGeneracion import OrigenDeGeneracion
 from Modelo.TipoDeDato import TipoDeDato
 from Modelo.DetalleMuestraSismica import DetalleMuestraSismica
 from Modelo.MuestraSismica import MuestraSismica
 from Modelo.SerieTemporal import SerieTemporal
 from Modelo.Sismografo import Sismografo
 from Modelo.EstacionSismologica import EstacionSismologica
+from Modelo.EventoSismico import EventoSismico
 from Controlador.GestorRegistrarResultadoDeRevisionManual import GestorRegistrarResultadoDeRevisionManual
+from Controlador.GestorGenerarSismograma import GestorGenerarSismograma
 
 # Crear tipos de datos
 tipo_velocidad = TipoDeDato("Velocidad de onda", 5.0, "Km/seg")
@@ -72,23 +70,27 @@ def crear_muestra(fecha, velocidad, frecuencia, longitud):
 # Agregar muestras a las series temporales
 serie_central.muestras = [
     crear_muestra(datetime(2025, 2, 21, 19, 5, 41), 7.0, 10.0, 0.7),
-    crear_muestra(datetime(2025, 2, 21, 19, 10, 41), 7.02, 10.0, 0.69)
+    crear_muestra(datetime(2025, 2, 21, 19, 10, 41), 7.02, 10.0, 0.69),
+    crear_muestra(datetime(2025, 2, 21, 19, 15, 41), 7.05, 10.1, 0.68),
+    crear_muestra(datetime(2025, 2, 21, 19, 20, 41), 7.08, 10.1, 0.67),
+    crear_muestra(datetime(2025, 2, 21, 19, 25, 41), 7.10, 10.2, 0.66)
 ]
 
 serie_norte.muestras = [
     crear_muestra(datetime(2025, 2, 21, 19, 5, 41), 7.1, 10.1, 0.71),
-    crear_muestra(datetime(2025, 2, 21, 19, 10, 41), 7.12, 10.1, 0.70)
+    crear_muestra(datetime(2025, 2, 21, 19, 10, 41), 7.12, 10.1, 0.70),
+    crear_muestra(datetime(2025, 2, 21, 19, 15, 41), 7.15, 10.2, 0.69),
+    crear_muestra(datetime(2025, 2, 21, 19, 20, 41), 7.18, 10.2, 0.68),
+    crear_muestra(datetime(2025, 2, 21, 19, 25, 41), 7.20, 10.3, 0.67)
 ]
 
 serie_sur.muestras = [
     crear_muestra(datetime(2025, 2, 21, 19, 5, 41), 6.9, 9.9, 0.69),
-    crear_muestra(datetime(2025, 2, 21, 19, 10, 41), 6.92, 9.9, 0.68)
+    crear_muestra(datetime(2025, 2, 21, 19, 10, 41), 6.92, 9.9, 0.68),
+    crear_muestra(datetime(2025, 2, 21, 19, 15, 41), 6.95, 10.0, 0.67),
+    crear_muestra(datetime(2025, 2, 21, 19, 20, 41), 6.98, 10.0, 0.66),
+    crear_muestra(datetime(2025, 2, 21, 19, 25, 41), 7.00, 10.1, 0.65)
 ]
-
-# Crear objetos necesarios
-alcance = AlcanceSismo("Local")
-clasificacion = ClasificacionSismo("Superficial", 0, 70)
-origen = OrigenDeGeneracion("Tectónico")
 
 # Crear evento sísmico
 evento = EventoSismico(
@@ -99,52 +101,17 @@ evento = EventoSismico(
     latitudEpicentro=-34.6037,
     longitudEpicentro=-58.3816
 )
-evento.setAlcanceSismo(alcance)
-evento.setClasificacionSismo(clasificacion)
-evento.setOrigenDeGeneracion(origen)
 
-# Agregar series temporales en orden no alfabético
+# Agregar series temporales al evento
+evento.agregarSerieTemporal(serie_central)
 evento.agregarSerieTemporal(serie_norte)
 evento.agregarSerieTemporal(serie_sur)
-evento.agregarSerieTemporal(serie_central)
 
-# Crear gestor y ejecutar
-gestor = GestorRegistrarResultadoDeRevisionManual()
-gestor.eventoSismicoSeleccionado = evento
-gestor.buscarDatosRestantesEventoSismico()
-gestor.buscarDatosSeriesTemporales()
+# Crear gestor de revisión manual y obtener series temporales
+gestor_revision = GestorRegistrarResultadoDeRevisionManual()
+gestor_revision.eventoSismicoSeleccionado = evento
+gestor_revision.buscarDatosSeriesTemporales()
 
-print("\nDatos restantes del evento sísmico:")
-for datos in gestor.listaDatosRestantesDeEventoSeleccionado:
-    print(f"\nAlcance: {datos['alcance']}")
-    print(f"Clasificación: {datos['clasificacion']['nombre']}")
-    print(f"  Profundidad desde: {datos['clasificacion']['profundidadDesde']} km")
-    print(f"  Profundidad hasta: {datos['clasificacion']['profundidadHasta']} km")
-    print(f"Origen: {datos['origen']}")
-
-print("\nSeries Temporales (sin ordenar):")
-for serie in gestor.seriesTemporalesDeEventoSeleccionado:
-    print(f"\nSerie Temporal - Estación Sismológica: {serie['estacionSismologica']}")
-    print(f"Sismógrafo: {serie['sismografo']}")
-    print(f"Fecha inicio: {serie['fechaHoraInicio']}")
-    print("\nMuestras:")
-    for muestra in serie['muestras']:
-        print(f"\n  Fecha/Hora: {muestra['fechaHora']}")
-        print("  Detalles:")
-        for detalle in muestra['detalles']:
-            print(f"    {detalle['denominacion']}: {detalle['valor']} {detalle['unidadMedida']} (Umbral: {detalle['valorUmbral']})")
-
-# Ordenar las series temporales
-gestor.ordenarSeriesTemporalesPorEstacionSismologica()
-
-print("\nSeries Temporales (ordenadas por estación):")
-for serie in gestor.seriesTemporalesDeEventoSeleccionado:
-    print(f"\nSerie Temporal - Estación Sismológica: {serie['estacionSismologica']}")
-    print(f"Sismógrafo: {serie['sismografo']}")
-    print(f"Fecha inicio: {serie['fechaHoraInicio']}")
-    print("\nMuestras:")
-    for muestra in serie['muestras']:
-        print(f"\n  Fecha/Hora: {muestra['fechaHora']}")
-        print("  Detalles:")
-        for detalle in muestra['detalles']:
-            print(f"    {detalle['denominacion']}: {detalle['valor']} {detalle['unidadMedida']} (Umbral: {detalle['valorUmbral']})") 
+# Crear gestor de sismogramas y generar visualizaciones
+gestor_sismograma = GestorGenerarSismograma()
+gestor_sismograma.generarSismogramasPorEstacion(gestor_revision.seriesTemporalesDeEventoSeleccionado) 
