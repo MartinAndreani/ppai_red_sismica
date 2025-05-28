@@ -8,9 +8,9 @@ class ClasificacionSismo:
         return self.nombre
     
     def getKmProfundidadDesde(self):
-        return self.getKmProfundidadDesde
+        return self.kmProfundidadDesde
     
     def getKmProfundidadHasta(self):
-        return self.getKmProfundidadHasta
+        return self.kmProfundidadHasta
     
     

@@ -1,7 +1,11 @@
-from Modelo.SerieTemporal import SerieTemporal
-
 class Sismografo:
-    def __init__(self, nombre: str, ubicacion: str):
-        self.identificadorSismografo = None # str
-        self.serieTemporal = [] # puntero a objetos SerieTemporal
+    def __init__(self, identificadorSismografo: str):
+        self.identificadorSismografo = identificadorSismografo # str
+        self.estacionSismologica = None # puntero a objeto EstacionSismologica
+        
+    def setEstacionSismologica(self, estacionSismologica):
+        self.estacionSismologica = estacionSismologica # puntero a objeto EstacionSismologica
+        
+    def getNombreEstacionSismologica(self):
+        return self.estacionSismologica.getNombre()
 

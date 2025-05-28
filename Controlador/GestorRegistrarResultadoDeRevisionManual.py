@@ -59,9 +59,9 @@ class GestorRegistrarResultadoDeRevisionManual:
         }
         self.listaDatosRestantesDeEventos.append(datosRestantes)
 
-    def buscarDatosMuestrasSismicasDeEventoSismico(self):
-        self.eventoSismicoSeleccionado.buscarDatosMuestrasSismicas()
-
+    def buscarDatosSeriesTemporales(self):
+        datos_muestras = self.eventoSismicoSeleccionado.buscarDatosSeriesTemporales()
+        self.listaDatosRestantesDeEventos.append(datos_muestras)
 
     def buscarNombreEstacionSismologicaDeCadaSerieTemporal(self):
         pass
