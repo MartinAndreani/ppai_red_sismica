@@ -63,6 +63,9 @@ class EventoSismico:
         self.finalizarCambioEstadoActual(fechaHoraActual)
         self.crearCambioEstado(estado)
 
+    def rechazar(self, fechaHoraActual, estadoRechazado):
+        self.finalizarCambioEstadoActual(fechaHoraActual)
+        self.crearCambioEstado(estadoRechazado)
 
     def finalizarCambioEstadoActual(self, fechaHoraFin):
         for cambioEstado in self.cambiosEstado:

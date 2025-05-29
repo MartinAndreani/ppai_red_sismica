@@ -6,8 +6,9 @@ from Modelo.SerieTemporal import SerieTemporal
 from Modelo.Sismografo import Sismografo
 from Modelo.EstacionSismologica import EstacionSismologica
 from Modelo.EventoSismico import EventoSismico
+from Modelo.Estado import Estado
+from Modelo.CambioEstado import CambioEstado
 from Controlador.GestorRegistrarResultadoDeRevisionManual import GestorRegistrarResultadoDeRevisionManual
-from Controlador.GestorGenerarSismograma import GestorGenerarSismograma
 
 # Crear tipos de datos
 tipo_velocidad = TipoDeDato("Velocidad de onda", 5.0, "Km/seg")
@@ -69,27 +70,27 @@ def crear_muestra(fecha, velocidad, frecuencia, longitud):
 
 # Agregar muestras a las series temporales
 serie_central.muestras = [
-    crear_muestra(datetime(2025, 2, 21, 19, 5, 41), 7.0, 10.0, 0.7),
-    crear_muestra(datetime(2025, 2, 21, 19, 10, 41), 7.02, 10.0, 0.69),
-    crear_muestra(datetime(2025, 2, 21, 19, 15, 41), 7.05, 10.1, 0.68),
-    crear_muestra(datetime(2025, 2, 21, 19, 20, 41), 7.08, 10.1, 0.67),
-    crear_muestra(datetime(2025, 2, 21, 19, 25, 41), 7.10, 10.2, 0.66)
+    crear_muestra(datetime(2025, 2, 21, 19, 5, 41), 5.0, 10.0, 0.7),   # Inicio suave
+    crear_muestra(datetime(2025, 2, 21, 19, 10, 41), 6.5, 10.0, 0.69), # Incremento gradual
+    crear_muestra(datetime(2025, 2, 21, 19, 15, 41), 8.0, 10.1, 0.68), # Pico
+    crear_muestra(datetime(2025, 2, 21, 19, 20, 41), 6.0, 10.1, 0.67), # Descenso
+    crear_muestra(datetime(2025, 2, 21, 19, 25, 41), 4.5, 10.2, 0.66)  # Estabilización
 ]
 
 serie_norte.muestras = [
-    crear_muestra(datetime(2025, 2, 21, 19, 5, 41), 7.1, 10.1, 0.71),
-    crear_muestra(datetime(2025, 2, 21, 19, 10, 41), 7.12, 10.1, 0.70),
-    crear_muestra(datetime(2025, 2, 21, 19, 15, 41), 7.15, 10.2, 0.69),
-    crear_muestra(datetime(2025, 2, 21, 19, 20, 41), 7.18, 10.2, 0.68),
-    crear_muestra(datetime(2025, 2, 21, 19, 25, 41), 7.20, 10.3, 0.67)
+    crear_muestra(datetime(2025, 2, 21, 19, 5, 41), 8.0, 10.1, 0.71),  # Inicio alto
+    crear_muestra(datetime(2025, 2, 21, 19, 10, 41), 7.0, 10.1, 0.70), # Descenso rápido
+    crear_muestra(datetime(2025, 2, 21, 19, 15, 41), 9.5, 10.2, 0.69), # Pico máximo
+    crear_muestra(datetime(2025, 2, 21, 19, 20, 41), 8.5, 10.2, 0.68), # Mantiene alto
+    crear_muestra(datetime(2025, 2, 21, 19, 25, 41), 7.5, 10.3, 0.67)  # Descenso gradual
 ]
 
 serie_sur.muestras = [
-    crear_muestra(datetime(2025, 2, 21, 19, 5, 41), 6.9, 9.9, 0.69),
-    crear_muestra(datetime(2025, 2, 21, 19, 10, 41), 6.92, 9.9, 0.68),
-    crear_muestra(datetime(2025, 2, 21, 19, 15, 41), 6.95, 10.0, 0.67),
-    crear_muestra(datetime(2025, 2, 21, 19, 20, 41), 6.98, 10.0, 0.66),
-    crear_muestra(datetime(2025, 2, 21, 19, 25, 41), 7.00, 10.1, 0.65)
+    crear_muestra(datetime(2025, 2, 21, 19, 5, 41), 3.0, 9.9, 0.69),   # Inicio muy bajo
+    crear_muestra(datetime(2025, 2, 21, 19, 10, 41), 4.5, 9.9, 0.68),  # Incremento moderado
+    crear_muestra(datetime(2025, 2, 21, 19, 15, 41), 3.5, 10.0, 0.67), # Oscilación
+    crear_muestra(datetime(2025, 2, 21, 19, 20, 41), 5.0, 10.0, 0.66), # Pico moderado
+    crear_muestra(datetime(2025, 2, 21, 19, 25, 41), 2.5, 10.1, 0.65)  # Caída final
 ]
 
 # Crear evento sísmico
@@ -107,11 +108,31 @@ evento.agregarSerieTemporal(serie_central)
 evento.agregarSerieTemporal(serie_norte)
 evento.agregarSerieTemporal(serie_sur)
 
-# Crear gestor de revisión manual y obtener series temporales
-gestor_revision = GestorRegistrarResultadoDeRevisionManual()
-gestor_revision.eventoSismicoSeleccionado = evento
-gestor_revision.buscarDatosSeriesTemporales()
+# Crear estado auto-detectado y agregarlo al evento
+estado_auto_detectado = Estado("EventoSismico", "AutoDetectado")
+cambio_estado = CambioEstado(fechaHoraInicio=datetime.now(), fechaHoraFin=None)
+cambio_estado.setEstado(estado_auto_detectado)
+evento.agregarCambioEstado(cambio_estado)
 
-# Crear gestor de sismogramas y generar visualizaciones
-gestor_sismograma = GestorGenerarSismograma()
-gestor_sismograma.generarSismogramasPorEstacion(gestor_revision.seriesTemporalesDeEventoSeleccionado) 
+# Crear gestor de revisión manual
+gestor_revision = GestorRegistrarResultadoDeRevisionManual()
+
+# Simular el flujo de revisión manual
+print("\n1. Buscando eventos sísmicos no revisados...")
+gestor_revision.buscarEventosSimicosNoRevisados([evento])
+print(f"Eventos no revisados encontrados: {len(gestor_revision.listaEventosSimicosNoRevisados)}")
+
+print("\n2. Seleccionando evento sísmico...")
+gestor_revision.eventoSismicoSeleccionado = evento
+
+print("\n3. Buscando datos de series temporales...")
+gestor_revision.buscarDatosSeriesTemporales()
+print(f"Series temporales encontradas: {len(gestor_revision.seriesTemporalesDeEventoSeleccionado)}")
+
+print("\n4. Ordenando series temporales por estación...")
+gestor_revision.ordenarSeriesTemporalesPorEstacionSismologica()
+print("Series temporales ordenadas por estación sismológica")
+
+print("\n5. Generando sismogramas...")
+gestor_revision.llamarCUGenerarSismograma()
+print("Sismogramas generados exitosamente") 

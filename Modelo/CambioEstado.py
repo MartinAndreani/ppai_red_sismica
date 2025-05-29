@@ -2,13 +2,10 @@ from datetime import datetime
 from Modelo.Estado import Estado
 
 class CambioEstado:
-    def __init__(self, fechaHoraInicio: datetime, fechaHoraFin: datetime):
+    def __init__(self, fechaHoraInicio: datetime, fechaHoraFin: datetime, estado: Estado):
         self.fechaHoraInicio = fechaHoraInicio # datetime
         self.fechaHoraFin = fechaHoraFin # datetime
-        self.estado = None # Puntero a objeto Estado
-
-    def setEstado(self, estado):
-        self.estado = estado
+        self.estado = estado # Puntero a objeto Estado
 
     def esEstadoActual(self):
         return self.fechaHoraFin is None

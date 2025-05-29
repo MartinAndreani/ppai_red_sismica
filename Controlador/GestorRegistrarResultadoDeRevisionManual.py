@@ -2,6 +2,8 @@ from datetime import datetime
 from typing import List
 from Modelo.EventoSismico import EventoSismico
 from Modelo.Estado import Estado
+from Controlador.GestorGenerarSismograma import GestorGenerarSismograma
+from Modelo.Sesion import Sesion
 
 class GestorRegistrarResultadoDeRevisionManual:
     def __init__(self):
@@ -69,6 +71,9 @@ class GestorRegistrarResultadoDeRevisionManual:
         # Ordenar las series temporales por nombre de estación sismológica
         self.seriesTemporalesDeEventoSeleccionado = sorted(self.seriesTemporalesDeEventoSeleccionado, key=lambda x: x['estacionSismologica'])
 
+    def llamarCUGenerarSismograma(self):
+        GestorGenerarSismograma().generarSismogramasPorEstacion(self.seriesTemporalesDeEventoSeleccionado)
+    
     def tomarAprobacionVisualizacionMapaEventoSismico(self):
         pass
 
@@ -108,7 +113,12 @@ class GestorRegistrarResultadoDeRevisionManual:
                 break
 
     def buscarDatosASLogueado(self):
-        pass
+        sesion = Sesion.getSesionActual()
+        self.datosUsuarioLogueado = sesion.getDatosASLogueado()
+
+    def rechazarEventoSismicoSeleccionado(self):
+        fechaHoraActual = self.getFechaHoraActual()
+        self.eventoSismicoSeleccionado.rechazar(fechaHoraActual, self.estadoRechazado)
 
     def finCU(self):
         pass 
