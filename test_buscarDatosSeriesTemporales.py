@@ -66,15 +66,14 @@ gestor.eventoSismicoSeleccionado = evento
 gestor.buscarDatosSeriesTemporales()
 
 # Mostrar resultados
-print("\nDatos almacenados en listaDatosRestantesDeEventos:")
-for lista_series in gestor.listaDatosRestantesDeEventos:
-    for serie in lista_series:
-        print(f"\nSerie Temporal - Estación Sismológica: {serie['estacionSismologica']}")
-        print(f"Sismógrafo: {serie['sismografo']}")
-        print(f"Fecha inicio: {serie['fechaHoraInicio']}")
-        print("\nMuestras:")
-        for muestra in serie['muestras']:
-            print(f"\n  Fecha/Hora: {muestra['fechaHora']}")
-            print("  Detalles:")
-            for detalle in muestra['detalles']:
-                print(f"    {detalle['denominacion']}: {detalle['valor']} {detalle['unidadMedida']} (Umbral: {detalle['valorUmbral']})") 
+print("\nDatos de series temporales encontrados:")
+for serie in gestor.seriesTemporalesDeEventoSeleccionado:
+    print(f"\nSerie Temporal - Estación Sismológica: {serie['estacionSismologica']}")
+    print(f"Sismógrafo: {serie['sismografo']}")
+    print(f"Fecha inicio: {serie['fechaHoraInicio']}")
+    print("\nMuestras:")
+    for muestra in serie['muestras']:
+        print(f"\n  Fecha/Hora: {muestra['fechaHora']}")
+        print("  Detalles:")
+        for detalle in muestra['detalles']:
+            print(f"    {detalle['denominacion']}: {detalle['valor']} {detalle['unidadMedida']} (Umbral: {detalle['valorUmbral']})") 

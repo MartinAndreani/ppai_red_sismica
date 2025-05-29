@@ -110,8 +110,7 @@ evento.agregarSerieTemporal(serie_sur)
 
 # Crear estado auto-detectado y agregarlo al evento
 estado_auto_detectado = Estado("EventoSismico", "AutoDetectado")
-cambio_estado = CambioEstado(fechaHoraInicio=datetime.now(), fechaHoraFin=None)
-cambio_estado.setEstado(estado_auto_detectado)
+cambio_estado = CambioEstado(fechaHoraInicio=datetime.now(), fechaHoraFin=None, estado=estado_auto_detectado)
 evento.agregarCambioEstado(cambio_estado)
 
 # Crear gestor de revisión manual
