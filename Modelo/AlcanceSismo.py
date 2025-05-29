@@ -1,7 +1,7 @@
 class AlcanceSismo:
     def __init__(self, nombre: str):
-        self.nombre = nombre # str
+        self.nombre = nombre
 
-    def getNombre(self):
+    def getDenominacion(self):
         return self.nombre
 

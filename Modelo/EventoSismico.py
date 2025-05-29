@@ -99,3 +99,4 @@ class EventoSismico:
             datos_serie['estacionSismologica'] = serie.getNombreEstacionSismologica()
             datos_series.append(datos_serie)
         return datos_series
+    

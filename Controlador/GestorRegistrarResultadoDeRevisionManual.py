@@ -4,7 +4,6 @@ from Modelo.EventoSismico import EventoSismico
 from Modelo.Estado import Estado
 from Controlador.GestorGenerarSismograma import GestorGenerarSismograma
 from Modelo.Sesion import Sesion
-
 class GestorRegistrarResultadoDeRevisionManual:
     def __init__(self):
         self.listaEventosSimicosNoRevisados = []  # Lista de punteros a objetos EventoSismico
@@ -23,9 +22,10 @@ class GestorRegistrarResultadoDeRevisionManual:
         for evento in eventos:
             if evento.esAutoDetectado():
                 self.listaEventosSimicosNoRevisados.append(evento)
+        return self.listaEventosSimicosNoRevisados
 
-    def buscarDatosPrincipalesEventosSismicosNoRevisados(self):
-        for evento in self.listaEventosSimicosNoRevisados:
+    def buscarDatosPrincipalesEventosSismicosNoRevisados(self, listaEventosSimicosNoRevisados):
+        for evento in listaEventosSimicosNoRevisados:
             datosEvento = {
                 'fechaHora': evento.getFechaHoraOcurrencia(),
                 'magnitud': evento.getValorMagnitud(),
@@ -35,9 +35,11 @@ class GestorRegistrarResultadoDeRevisionManual:
                 'longitudEpicentro': evento.getLongitudEpicentro()
             }
             self.listaDatosPrincipalesDeEventos.append(datosEvento)
+        return self.listaDatosPrincipalesDeEventos
 
-    def ordenarDatosDeEventosSismicosPorFechaHoraOcurrencia(self):
-        self.listaDatosPrincipalesDeEventos.sort(key=lambda x: x['fechaHora'])
+    def ordenarDatosDeEventosSismicosPorFechaHoraOcurrencia(self, listaDatosPrincipalesDeEventos):
+        listaDatosPrincipalesDeEventos.sort(key=lambda x: x['fechaHora'])
+        return listaDatosPrincipalesDeEventos 
 
     def tomarSeleccionEventoSismico(self):
         pass
