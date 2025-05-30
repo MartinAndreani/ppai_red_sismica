@@ -27,6 +27,7 @@ class GestorRegistrarResultadoDeRevisionManual:
     def buscarDatosPrincipalesEventosSismicosNoRevisados(self):
         for evento in self.listaEventosSimicosNoRevisados:
             datosEvento = {
+                'id': evento.getId(),
                 'fechaHora': evento.getFechaHoraOcurrencia(),
                 'magnitud': evento.getValorMagnitud(),
                 'latitudHipocentro': evento.getLatitudHipocentro(),
@@ -39,8 +40,13 @@ class GestorRegistrarResultadoDeRevisionManual:
     def ordenarDatosDeEventosSismicosPorFechaHoraOcurrencia(self):
         self.listaDatosPrincipalesDeEventos.sort(key=lambda x: x['fechaHora'])
 
-    def tomarSeleccionEventoSismico(self):
-        pass
+    def tomarSeleccionEventoSismico(self, evento):
+        self.eventoSismicoSeleccionado = evento
+        if self.estadoBloqueadoEnRevision is None:
+            self.estadoBloqueadoEnRevision = Estado("EventoSismico", "BloqueadoEnRevision")
+        self.bloquearEventoSismicoSeleccionado()
+        self.buscarDatosRestantesEventoSismico()
+        self.buscarDatosSeriesTemporales()
 
     def buscarEstadoBloqueadoEnRevision(self, estados):
         for estado in estados:

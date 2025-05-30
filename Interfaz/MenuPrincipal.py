@@ -1,2 +1,6 @@
+from Interfaz.PantallaRegistrarResultadoDeRevisiónManual import PantallaRegistrarResultadoDeRevisiónManual
+from test_front import eventos
 class MenuPrincipal:
-    pass
+    def opcionRegistrarResultadoDeRevisiónManual(self):
+        PantallaRegistrarResultadoDeRevisiónManual().habilitar(eventos)
+
