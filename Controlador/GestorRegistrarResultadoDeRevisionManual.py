@@ -4,6 +4,7 @@ from Modelo.EventoSismico import EventoSismico
 from Modelo.Estado import Estado
 from Controlador.GestorGenerarSismograma import GestorGenerarSismograma
 from Modelo.Sesion import Sesion
+
 class GestorRegistrarResultadoDeRevisionManual:
     def __init__(self):
         self.listaEventosSimicosNoRevisados = []  # Lista de punteros a objetos EventoSismico
@@ -22,11 +23,11 @@ class GestorRegistrarResultadoDeRevisionManual:
         for evento in eventos:
             if evento.esAutoDetectado():
                 self.listaEventosSimicosNoRevisados.append(evento)
-        return self.listaEventosSimicosNoRevisados
 
-    def buscarDatosPrincipalesEventosSismicosNoRevisados(self, listaEventosSimicosNoRevisados):
-        for evento in listaEventosSimicosNoRevisados:
+    def buscarDatosPrincipalesEventosSismicosNoRevisados(self):
+        for evento in self.listaEventosSimicosNoRevisados:
             datosEvento = {
+                'id': evento.getId(),
                 'fechaHora': evento.getFechaHoraOcurrencia(),
                 'magnitud': evento.getValorMagnitud(),
                 'latitudHipocentro': evento.getLatitudHipocentro(),
@@ -35,14 +36,15 @@ class GestorRegistrarResultadoDeRevisionManual:
                 'longitudEpicentro': evento.getLongitudEpicentro()
             }
             self.listaDatosPrincipalesDeEventos.append(datosEvento)
-        return self.listaDatosPrincipalesDeEventos
 
-    def ordenarDatosDeEventosSismicosPorFechaHoraOcurrencia(self, listaDatosPrincipalesDeEventos):
-        listaDatosPrincipalesDeEventos.sort(key=lambda x: x['fechaHora'])
-        return listaDatosPrincipalesDeEventos 
+    def ordenarDatosDeEventosSismicosPorFechaHoraOcurrencia(self):
+        self.listaDatosPrincipalesDeEventos.sort(key=lambda x: x['fechaHora'])
 
-    def tomarSeleccionEventoSismico(self):
-        pass
+    def tomarSeleccionEventoSismico(self, evento):
+        self.eventoSismicoSeleccionado = evento
+        # self.buscarEstadoBloqueadoEnRevision(estados)
+        # self.bloquearEventoSismicoSeleccionado()
+        self.buscarDatosRestantesEventoSismico()
 
     def buscarEstadoBloqueadoEnRevision(self, estados):
         for estado in estados:

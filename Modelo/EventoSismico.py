@@ -6,8 +6,11 @@ from Modelo.ClasificacionSismo import ClasificacionSismo
 from Modelo.OrigenDeGeneracion import OrigenDeGeneracion
 
 class EventoSismico:
+    _id_counter = 1
     def __init__(self, fechaHoraOcurrencia: datetime, valorMagnitud: float, latitudHipocentro: float, longitudHipocentro: float,
                  latitudEpicentro: float, longitudEpicentro: float):
+        self.id = EventoSismico._id_counter
+        EventoSismico._id_counter += 1
         self.fechaHoraOcurrencia = fechaHoraOcurrencia # datetime
         self.valorMagnitud = valorMagnitud # float
         self.latitudHipocentro = latitudHipocentro # float
@@ -40,7 +43,15 @@ class EventoSismico:
             if cambioEstado.esEstadoActual():
                 return cambioEstado.esAutoDetectado()
         return False
-
+    
+    ######################
+    
+    def getId(self):
+            return self.id
+    
+    #############
+    
+    
     def getFechaHoraOcurrencia(self):
         return self.fechaHoraOcurrencia
 
@@ -95,7 +106,6 @@ class EventoSismico:
         datos_series = []
         for serie in self.serieTemporal:
             datos_serie = serie.getDatos()
-            # Agregar nombre de estación sismológica usando la cadena de mensajes
             datos_serie['estacionSismologica'] = serie.getNombreEstacionSismologica()
             datos_series.append(datos_serie)
         return datos_series

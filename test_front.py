@@ -73,7 +73,6 @@ class GeneradorEventos:
         return [GeneradorEventos.crear_evento(config) for config in configuraciones]
 
 
-# Configuración de ejemplo - ¡Fácil de modificar!
 CONFIG_EVENTOS = [
     {
         'fecha': datetime.now(),
@@ -116,9 +115,28 @@ CONFIG_EVENTOS = [
                 ]
             }
         ]
-    }
-    # Puedes agregar más configuraciones de eventos aquí...
+    },
+    {
+        'fecha': datetime.now(),
+        'magnitud': 5.5,
+        'lat': -34.60,
+        'lon': -58.38,
+        'alcance': "Local",
+        'clasificacion': {'tipo': "Superficial", 'prof_min': 0, 'prof_max': 70},
+        'origen': "Tectónico",
+        'estado': "AutoDetectado",
+        'estaciones': [
+            {
+                'codigo': "SISM01",
+                'nombre': "Estación Central",
+                'frecuencia': "50 Hz",
+                'muestras': [
+                    {'nombre': "Velocidad", 'valor_ref': 5.0, 'unidad': "km/s", 'valor': 7.0},
+                    {'nombre': "Frecuencia", 'valor_ref': 8.0, 'unidad': "Hz", 'valor': 10.0}
+                ]
+            }
+        ]
+    },
 ]
 
-# Uso:
 eventos = GeneradorEventos.generar_eventos_test(CONFIG_EVENTOS)

@@ -8,6 +8,7 @@ from Interfaz.PantallaRegistrarResultadoDeRevisiónManual import PantallaRegistr
 load_dotenv()
 
 app = FastAPI()
+pantalla = PantallaRegistrarResultadoDeRevisiónManual()
 
 app.add_middleware(
     CORSMiddleware,
@@ -23,9 +24,13 @@ def leer_hola():
 
 @app.get("/api/eventos")
 def get_eventos():
-    pantalla = PantallaRegistrarResultadoDeRevisiónManual()
-    eventos_list = pantalla.habilitar(eventos)
-    return eventos_list 
+    return pantalla.habilitar(eventos)
+
+@app.get("/api/eventos/{evento_id}/datos-restantes")
+def get_datos_restantes_evento(evento_id: int):
+    # pantalla.habilitar(eventos)
+    pantalla.seleccionarEventoSismico(evento_id)
+    return pantalla.mostrarDatosEventoSismico()
 
 if __name__ == "__main__":
     import uvicorn
