@@ -26,12 +26,19 @@ def leer_hola():
 def get_eventos():
     return pantalla.habilitar(eventos)
 
-@app.get("/api/eventos/{evento_id}/datos-restantes")
-def get_datos_restantes_evento(evento_id: int):
-    # pantalla.habilitar(eventos)
+@app.get("/api/eventos/datos-restantes")
+def get_datos_restantes():
+    return pantalla.getDatosRestantes()
+    
+@app.get("/api/eventos/{evento_id}/detalles")
+def get_detalles_evento(evento_id: int):
     pantalla.seleccionarEventoSismico(evento_id)
-    return pantalla.mostrarDatosEventoSismico()
-
+    datos_restantes = pantalla.mostrarDatosEventoSismico()
+    series_temporales = pantalla.mostrarSeriesTemporales()
+    return {
+        "datos_restantes": datos_restantes,
+        "series_temporales": series_temporales
+    }
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))

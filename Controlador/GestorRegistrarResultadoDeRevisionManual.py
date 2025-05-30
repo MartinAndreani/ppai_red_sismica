@@ -42,9 +42,11 @@ class GestorRegistrarResultadoDeRevisionManual:
 
     def tomarSeleccionEventoSismico(self, evento):
         self.eventoSismicoSeleccionado = evento
-        # self.buscarEstadoBloqueadoEnRevision(estados)
-        # self.bloquearEventoSismicoSeleccionado()
+        if self.estadoBloqueadoEnRevision is None:
+            self.estadoBloqueadoEnRevision = Estado("EventoSismico", "BloqueadoEnRevision")
+        self.bloquearEventoSismicoSeleccionado()
         self.buscarDatosRestantesEventoSismico()
+        self.buscarDatosSeriesTemporales()
 
     def buscarEstadoBloqueadoEnRevision(self, estados):
         for estado in estados:

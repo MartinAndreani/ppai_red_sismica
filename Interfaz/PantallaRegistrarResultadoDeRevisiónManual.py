@@ -1,7 +1,12 @@
 from Controlador.GestorRegistrarResultadoDeRevisionManual import GestorRegistrarResultadoDeRevisionManual
 class PantallaRegistrarResultadoDeRevisiónManual:
+    def __init__(self):
+        self.gestor = GestorRegistrarResultadoDeRevisionManual()
+        self.datosRestantes = []
+        self.eventos_ordenados = []
+
     def habilitar(self, eventos):
-        self.datosRestantes = [...]
+        self.datosRestantes = []
         self.gestor = GestorRegistrarResultadoDeRevisionManual()
         self.gestor.buscarEventosSimicosNoRevisados(eventos)
         self.gestor.buscarDatosPrincipalesEventosSismicosNoRevisados()
@@ -13,7 +18,6 @@ class PantallaRegistrarResultadoDeRevisiónManual:
                 evento['fechaHora'] = evento['fechaHora'].isoformat()
         return self.eventos_ordenados or []
     def seleccionarEventoSismico(self, id_evento):
-        # Buscamos el objeto EventoSismico original con el id
         for evento in self.gestor.listaEventosSimicosNoRevisados:
             if evento.getId() == id_evento:
                 self.gestor.tomarSeleccionEventoSismico(evento)
@@ -21,6 +25,11 @@ class PantallaRegistrarResultadoDeRevisiónManual:
 
     def mostrarDatosEventoSismico(self):
         return self.gestor.listaDatosRestantesDeEventoSeleccionado
+    def mostrarSeriesTemporales(self):
+        self.gestor.buscarDatosSeriesTemporales() 
+        self.gestor.ordenarSeriesTemporalesPorEstacionSismologica() 
+        self.series_temporales = self.gestor.seriesTemporalesDeEventoSeleccionado
+        return self.series_temporales 
     def habilitarVisualizacionMapa():
        pass
     def solicitarOpcionModificacion():
