@@ -34,6 +34,3 @@ class PantallaRegistrarResultadoDeRevisiónManual:
        pass
     def solicitarOpcionModificacion():
         pass
-    def getDatosRestantes(self):
-    # Devuelve los datos reales del gestor
-        return self.gestor.listaDatosRestantesDeEventoSeleccionado
