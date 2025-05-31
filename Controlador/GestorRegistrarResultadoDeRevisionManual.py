@@ -40,13 +40,18 @@ class GestorRegistrarResultadoDeRevisionManual:
     def ordenarDatosDeEventosSismicosPorFechaHoraOcurrencia(self):
         self.listaDatosPrincipalesDeEventos.sort(key=lambda x: x['fechaHora'])
 
-    def tomarSeleccionEventoSismico(self, evento):
-        self.eventoSismicoSeleccionado = evento
-        if self.estadoBloqueadoEnRevision is None:
-            self.estadoBloqueadoEnRevision = Estado("EventoSismico", "BloqueadoEnRevision")
-        self.bloquearEventoSismicoSeleccionado()
-        self.buscarDatosRestantesEventoSismico()
-        self.buscarDatosSeriesTemporales()
+    def tomarSeleccionEventoSismico(self, id_evento):
+        for evento in self.listaEventosSimicosNoRevisados:
+            if evento.getId() == id_evento:
+                self.eventoSismicoSeleccionado = evento
+                break
+
+        if self.eventoSismicoSeleccionado:
+            if self.estadoBloqueadoEnRevision is None:
+                self.estadoBloqueadoEnRevision = Estado("EventoSismico", "BloqueadoEnRevision")
+            self.bloquearEventoSismicoSeleccionado()
+            self.buscarDatosRestantesEventoSismico()
+            self.buscarDatosSeriesTemporales()
 
     def buscarEstadoBloqueadoEnRevision(self, estados):
         for estado in estados:
@@ -87,7 +92,14 @@ class GestorRegistrarResultadoDeRevisionManual:
         pass
 
     def tomarResultadoDeRevisionManual(self):
-        pass
+        if self.resultadoDeRevisionManual == "Rechazar evento":
+            self.rechazarEventoSismicoSeleccionado()
+        elif self.resultadoDeRevisionManual == "Confirmar evento":
+            # Aquí podrías implementar la lógica para confirmar el evento
+            pass
+        elif self.resultadoDeRevisionManual == "Solicitar revisión a experto":
+            # Aquí podrías implementar la lógica para solicitar revisión a experto
+            pass
 
     def validarDatosModificablesYResultadoDeRevisionManual(self): # Valida que el EventoSismico seleccionado cuente con los atributos magnitud
       
@@ -124,6 +136,8 @@ class GestorRegistrarResultadoDeRevisionManual:
 
     def rechazarEventoSismicoSeleccionado(self):
         fechaHoraActual = self.getFechaHoraActual()
+        if self.estadoRechazado is None:
+            self.estadoRechazado = Estado("EventoSismico", "Rechazado")
         self.eventoSismicoSeleccionado.rechazar(fechaHoraActual, self.estadoRechazado)
 
     def finCU(self):
