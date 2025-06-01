@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from test_front import eventos
 from Interfaz.PantallaRegistrarResultadoDeRevisiónManual import PantallaRegistrarResultadoDeRevisiónManual
+from Modelo.Estado import Estado
 
 load_dotenv()
 
@@ -18,9 +19,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/api/hola")
-def leer_hola():
-    return {"mensaje": "Hola desde FastAPI"}
+ESTADOS_SISMICOS = [
+    Estado("EventoSismico", "AutoDetectado"),
+    Estado("EventoSismico", "BloqueadoEnRevision"),
+    Estado("EventoSismico", "Rechazado"),
+    Estado("EventoSismico", "Confirmado"),
+    Estado("EventoSismico", "SolicitarRevisionExperto"),
+]
+
 
 @app.get("/api/eventos")
 def get_eventos():
@@ -32,7 +38,7 @@ def get_datos_restantes():
     
 @app.get("/api/eventos/{evento_id}/detalles")
 def get_detalles_evento(evento_id: int):
-    pantalla.seleccionarEventoSismico(evento_id)
+    pantalla.seleccionarEventoSismico(evento_id, ESTADOS_SISMICOS)
     datos_restantes = pantalla.mostrarDatosEventoSismico()
     series_temporales = pantalla.mostrarSeriesTemporales()
     return {
@@ -47,8 +53,7 @@ async def post_evento_accion(request: Request):
     nuevo_estado = data.get("estado")
     if evento_id is None or not nuevo_estado:
         return {"mensaje": "Faltan datos para procesar la acción."}
-    pantalla.seleccionarEventoSismico(evento_id)
-    pantalla.seleccionarResultadoRevisionManual(nuevo_estado)
+    pantalla.seleccionarResultadoRevisionManual(nuevo_estado, ESTADOS_SISMICOS)
     return {"mensaje": f"Estado '{nuevo_estado}' aplicado al evento {evento_id}"}
 
 @app.get("/api/test/eventos-todos")

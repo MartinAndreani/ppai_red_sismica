@@ -6,16 +6,16 @@ class PantallaRegistrarResultadoDeRevisiónManual:
         self.eventos_ordenados = []
 
     def habilitar(self, eventos):
-        self.datosRestantes = []
-        self.gestor = GestorRegistrarResultadoDeRevisionManual()
+        self.gestor.listaEventosSimicosNoRevisados = []
+        self.gestor.listaDatosPrincipalesDeEventos = []
         self.gestor.buscarEventosSimicosNoRevisados(eventos)
         self.gestor.buscarDatosPrincipalesEventosSismicosNoRevisados()
         self.gestor.ordenarDatosDeEventosSismicosPorFechaHoraOcurrencia()
         self.eventos_ordenados = self.gestor.listaDatosPrincipalesDeEventos
         return self.eventos_ordenados or []
     
-    def seleccionarEventoSismico(self, id_evento):
-        self.gestor.tomarSeleccionEventoSismico(id_evento)
+    def seleccionarEventoSismico(self, id_evento, lista_estados):
+        self.gestor.tomarSeleccionEventoSismico(id_evento, lista_estados)
 
     def mostrarDatosEventoSismico(self):
         return self.gestor.listaDatosRestantesDeEventoSeleccionado
@@ -28,9 +28,9 @@ class PantallaRegistrarResultadoDeRevisiónManual:
        pass
     def solicitarOpcionModificacion():
         pass
-    def seleccionarResultadoRevisionManual(self, resultado):
+    def seleccionarResultadoRevisionManual(self, resultado, lista_estados):
         self.gestor.resultadoDeRevisionManual = resultado
-        self.gestor.tomarResultadoDeRevisionManual()
+        self.gestor.tomarResultadoDeRevisionManual(lista_estados)
 
     def getDatosRestantes(self):
     # Devuelve los datos reales del gestor
