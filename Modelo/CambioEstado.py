@@ -11,6 +11,8 @@ class CambioEstado:
         return self.fechaHoraFin is None
 
     def esAutoDetectado(self):
+        if self.estado is None:
+            return False
         return self.estado.esAutoDetectado()
 
     def setFechaHoraFin(self, fechaHoraFin):
